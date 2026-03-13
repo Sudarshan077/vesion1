@@ -38,5 +38,3 @@ A Distributor Management System (DMS) designed to digitize the distribution supp
     *   Initialize Web and Mobile apps.
     *   Connect to Backend APIs.
 
----
-*Note for AI Assistants: When resuming work in a new chat, read this README first, then proceed to the "Next Step" listed in the Current Progress & Status section.*
