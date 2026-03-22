@@ -4,6 +4,8 @@ class ApiConfig {
   static const String productsEndpoint = '$baseUrl/products';
   static const String retailersEndpoint = '$baseUrl/retailers';
   static const String ordersEndpoint = '$baseUrl/orders';
+  static const String profileEndpoint = '$baseUrl/profile';
+  static const String priceRulesEndpoint = '$baseUrl/price-rules';
   static const String salesmenEndpoint = '$baseUrl/salesmen';
   static const String visitsEndpoint = '$baseUrl/visits';
   static const String beatPlansEndpoint = '$baseUrl/beat-plans';

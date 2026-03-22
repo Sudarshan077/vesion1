@@ -8,6 +8,8 @@ import 'retailers_screen.dart';
 import 'orders_screen.dart';
 import 'consumer_dashboard_screen.dart';
 import 'retailer_dashboard_screen.dart';
+import 'profile_screen.dart';
+import 'pricing_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -25,11 +27,13 @@ class _AppShellState extends State<AppShell> {
       return const [
         ConsumerDashboardScreen(),
         OrdersScreen(),
+        ProfileScreen(),
       ];
     } else if (auth.isRetailer) {
       return const [
         RetailerDashboardScreen(),
         OrdersScreen(),
+        ProfileScreen(),
       ];
     } else {
       // Admin/Distributor — the original dashboard
@@ -37,7 +41,9 @@ class _AppShellState extends State<AppShell> {
         DashboardScreen(),
         ProductsScreen(),
         RetailersScreen(),
+        PricingScreen(),
         OrdersScreen(),
+        ProfileScreen(),
       ];
     }
   }
@@ -47,18 +53,22 @@ class _AppShellState extends State<AppShell> {
       return const [
         NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: Text('Home')),
         NavigationRailDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long_rounded), label: Text('My Orders')),
+        NavigationRailDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: Text('Profile')),
       ];
     } else if (auth.isRetailer) {
       return const [
         NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard_rounded), label: Text('Home')),
         NavigationRailDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long_rounded), label: Text('My Orders')),
+        NavigationRailDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: Text('Profile')),
       ];
     } else {
       return const [
         NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard_rounded), label: Text('Dashboard')),
         NavigationRailDestination(icon: Icon(Icons.inventory_2_outlined), selectedIcon: Icon(Icons.inventory_2_rounded), label: Text('Products')),
         NavigationRailDestination(icon: Icon(Icons.store_outlined), selectedIcon: Icon(Icons.store_rounded), label: Text('Retailers')),
+        NavigationRailDestination(icon: Icon(Icons.price_change_outlined), selectedIcon: Icon(Icons.price_change_rounded), label: Text('Pricing')),
         NavigationRailDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long_rounded), label: Text('Orders')),
+        NavigationRailDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: Text('Profile')),
       ];
     }
   }
@@ -68,18 +78,22 @@ class _AppShellState extends State<AppShell> {
       return const [
         NavigationDestination(icon: Icon(Icons.home_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.home_rounded, color: AppTheme.accent), label: 'Home'),
         NavigationDestination(icon: Icon(Icons.receipt_long_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.receipt_long_rounded, color: AppTheme.accent), label: 'My Orders'),
+        NavigationDestination(icon: Icon(Icons.person_outline_rounded, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.person_rounded, color: AppTheme.accent), label: 'Profile'),
       ];
     } else if (auth.isRetailer) {
       return const [
         NavigationDestination(icon: Icon(Icons.dashboard_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.accent), label: 'Home'),
         NavigationDestination(icon: Icon(Icons.receipt_long_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.receipt_long_rounded, color: AppTheme.accent), label: 'My Orders'),
+        NavigationDestination(icon: Icon(Icons.person_outline_rounded, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.person_rounded, color: AppTheme.accent), label: 'Profile'),
       ];
     } else {
       return const [
         NavigationDestination(icon: Icon(Icons.dashboard_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.accent), label: 'Dashboard'),
         NavigationDestination(icon: Icon(Icons.inventory_2_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.inventory_2_rounded, color: AppTheme.accent), label: 'Products'),
         NavigationDestination(icon: Icon(Icons.store_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.store_rounded, color: AppTheme.accent), label: 'Retailers'),
+        NavigationDestination(icon: Icon(Icons.price_change_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.price_change_rounded, color: AppTheme.accent), label: 'Pricing'),
         NavigationDestination(icon: Icon(Icons.receipt_long_outlined, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.receipt_long_rounded, color: AppTheme.accent), label: 'Orders'),
+        NavigationDestination(icon: Icon(Icons.person_outline_rounded, color: AppTheme.textSecondary), selectedIcon: Icon(Icons.person_rounded, color: AppTheme.accent), label: 'Profile'),
       ];
     }
   }
@@ -186,4 +200,5 @@ class _AppShellState extends State<AppShell> {
     );
   }
 }
+
 

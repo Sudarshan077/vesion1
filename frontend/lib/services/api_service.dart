@@ -142,5 +142,75 @@ class ApiService {
     return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
   }
 
+  // ─── Profile ───────────────────────────────────────────────
+
+  static Future<Map<String, dynamic>> getProfile() async {
+    final response = await http.get(
+      Uri.parse(ApiConfig.profileEndpoint),
+      headers: _headers(),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
+  static Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> profileData) async {
+    final response = await http.put(
+      Uri.parse(ApiConfig.profileEndpoint),
+      headers: _headers(),
+      body: jsonEncode(profileData),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
+  static Future<Map<String, dynamic>> changePassword(String currentPassword, String newPassword) async {
+    final response = await http.put(
+      Uri.parse('${ApiConfig.profileEndpoint}/password'),
+      headers: _headers(),
+      body: jsonEncode({
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      }),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
+  // ─── Price Rules ───────────────────────────────────────────
+
+  static Future<List<dynamic>> getPriceRules() async {
+    final response = await http.get(
+      Uri.parse(ApiConfig.priceRulesEndpoint),
+      headers: _headers(),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to load price rules');
+  }
+
+  static Future<Map<String, dynamic>> createPriceRule(Map<String, dynamic> rule) async {
+    final response = await http.post(
+      Uri.parse(ApiConfig.priceRulesEndpoint),
+      headers: _headers(),
+      body: jsonEncode(rule),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
+  static Future<Map<String, dynamic>> updatePriceRule(String id, Map<String, dynamic> rule) async {
+    final response = await http.put(
+      Uri.parse('${ApiConfig.priceRulesEndpoint}/$id'),
+      headers: _headers(),
+      body: jsonEncode(rule),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
+  static Future<Map<String, dynamic>> deletePriceRule(String id) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.priceRulesEndpoint}/$id'),
+      headers: _headers(),
+    );
+    return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
+  }
+
 }
 
