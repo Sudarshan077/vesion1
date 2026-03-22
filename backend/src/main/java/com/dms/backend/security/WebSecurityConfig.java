@@ -61,9 +61,13 @@ public class WebSecurityConfig {
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> 
-                    auth.requestMatchers("/api/v1/auth/**").permitAll()
+                    auth.requestMatchers("/", "/index.html", "/favicon.png", "/flutter.js", "/flutter_bootstrap.js", "/flutter_service_worker.js", "/manifest.json", "/version.json", "/assets/**", "/canvaskit/**", "/icons/**", "/main.dart.js").permitAll()
+                        .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup").permitAll()
                         .requestMatchers("/api/v1/test/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/v1/products/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RETAILER", "ROLE_CUSTOMER")
+                        .requestMatchers("/api/v1/retailers/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/orders/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RETAILER", "ROLE_CUSTOMER")
                         .anyRequest().authenticated()
                 );
 

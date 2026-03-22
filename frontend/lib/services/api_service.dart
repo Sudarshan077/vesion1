@@ -53,18 +53,25 @@ class ApiService {
     required String password,
     required String fullName,
     required String tenantName,
+    String? role,
     List<String>? roles,
   }) async {
+    final body = <String, dynamic>{
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'tenantName': tenantName,
+    };
+    if (role != null) {
+      body['role'] = role;
+    } else if (roles != null) {
+      body['roles'] = roles;
+    }
+
     final response = await http.post(
       Uri.parse('${ApiConfig.authEndpoint}/signup'),
       headers: _headers(auth: false),
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-        'fullName': fullName,
-        'tenantName': tenantName,
-        'roles': roles ?? ['ROLE_USER'],
-      }),
+      body: jsonEncode(body),
     );
     return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
   }
@@ -134,4 +141,6 @@ class ApiService {
     );
     return {'statusCode': response.statusCode, 'body': jsonDecode(response.body)};
   }
+
 }
+

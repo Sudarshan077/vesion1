@@ -71,9 +71,18 @@ public class EntityMappingTest {
                 .build();
         retailer = entityManager.persistAndFlush(retailer);
 
+        User customer = User.builder()
+                .tenant(tenant)
+                .email("consumer@test.com")
+                .password("pass")
+                .fullName("Test Consumer")
+                .build();
+        customer = entityManager.persistAndFlush(customer);
+
         Order order = Order.builder()
                 .tenant(tenant)
                 .retailer(retailer)
+                .createdBy(customer)
                 .orderStatus("PENDING")
                 .totalAmount(new BigDecimal("500.00"))
                 .build();

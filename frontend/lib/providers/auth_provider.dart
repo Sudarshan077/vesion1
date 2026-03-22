@@ -5,14 +5,22 @@ class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
   bool _isLoading = false;
   String? _email;
+  String? _fullName;
+  String? _tenantName;
   List<String>? _roles;
   String? _error;
 
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
   String? get email => _email;
+  String? get fullName => _fullName;
+  String? get tenantName => _tenantName;
   List<String>? get roles => _roles;
   String? get error => _error;
+
+  bool get isAdmin => _roles?.contains('ROLE_ADMIN') ?? false;
+  bool get isRetailer => _roles?.contains('ROLE_RETAILER') ?? false;
+  bool get isCustomer => _roles?.contains('ROLE_CUSTOMER') ?? false;
 
   Future<void> checkAuth() async {
     final token = await ApiService.getToken();
@@ -30,6 +38,8 @@ class AuthProvider with ChangeNotifier {
       if (result['statusCode'] == 200) {
         _isAuthenticated = true;
         _email = result['body']['email'];
+        _fullName = result['body']['fullName'];
+        _tenantName = result['body']['tenantName'];
         _roles = List<String>.from(result['body']['roles'] ?? []);
         _isLoading = false;
         notifyListeners();
@@ -53,6 +63,7 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required String fullName,
     required String tenantName,
+    String? role,
   }) async {
     _isLoading = true;
     _error = null;
@@ -64,6 +75,7 @@ class AuthProvider with ChangeNotifier {
         password: password,
         fullName: fullName,
         tenantName: tenantName,
+        role: role,
       );
       _isLoading = false;
       if (result['statusCode'] == 200) {
@@ -86,7 +98,10 @@ class AuthProvider with ChangeNotifier {
     await ApiService.clearToken();
     _isAuthenticated = false;
     _email = null;
+    _fullName = null;
+    _tenantName = null;
     _roles = null;
     notifyListeners();
   }
 }
+

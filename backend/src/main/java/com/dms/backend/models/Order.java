@@ -21,12 +21,12 @@ public class Order {
     private Tenant tenant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "retailer_id", nullable = false)
-    private Retailer retailer;
+    @JoinColumn(name = "retailer_id")
+    private Retailer retailer; // Null for B2C Consumer orders
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salesman_id")
-    private User salesman;
+    @JoinColumn(name = "created_by_id", nullable = false)
+    private User createdBy; // The user (Retailer or Consumer) who placed the order
 
     @Column(nullable = false)
     private String orderStatus; // PENDING, CONFIRMED, DELIVERED, CANCELLED
@@ -45,10 +45,10 @@ public class Order {
 
     public Order() {}
 
-    public Order(Tenant tenant, Retailer retailer, User salesman, String orderStatus, BigDecimal totalAmount) {
+    public Order(Tenant tenant, Retailer retailer, User createdBy, String orderStatus, BigDecimal totalAmount) {
         this.tenant = tenant;
         this.retailer = retailer;
-        this.salesman = salesman;
+        this.createdBy = createdBy;
         this.orderStatus = orderStatus;
         this.totalAmount = totalAmount;
     }
@@ -62,8 +62,8 @@ public class Order {
     public Retailer getRetailer() { return retailer; }
     public void setRetailer(Retailer retailer) { this.retailer = retailer; }
 
-    public User getSalesman() { return salesman; }
-    public void setSalesman(User salesman) { this.salesman = salesman; }
+    public User getCreatedBy() { return createdBy; }
+    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 
     public String getOrderStatus() { return orderStatus; }
     public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
@@ -87,18 +87,18 @@ public class Order {
     public static class OrderBuilder {
         private Tenant tenant;
         private Retailer retailer;
-        private User salesman;
+        private User createdBy;
         private String orderStatus;
         private BigDecimal totalAmount;
 
         public OrderBuilder tenant(Tenant tenant) { this.tenant = tenant; return this; }
         public OrderBuilder retailer(Retailer retailer) { this.retailer = retailer; return this; }
-        public OrderBuilder salesman(User salesman) { this.salesman = salesman; return this; }
+        public OrderBuilder createdBy(User createdBy) { this.createdBy = createdBy; return this; }
         public OrderBuilder orderStatus(String orderStatus) { this.orderStatus = orderStatus; return this; }
         public OrderBuilder totalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; return this; }
 
         public Order build() {
-            return new Order(tenant, retailer, salesman, orderStatus, totalAmount);
+            return new Order(tenant, retailer, createdBy, orderStatus, totalAmount);
         }
     }
 }

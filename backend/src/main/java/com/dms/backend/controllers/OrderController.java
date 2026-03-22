@@ -2,6 +2,7 @@ package com.dms.backend.controllers;
 
 import com.dms.backend.models.Order;
 import com.dms.backend.models.Tenant;
+import com.dms.backend.models.User;
 import com.dms.backend.repositories.OrderRepository;
 import com.dms.backend.repositories.UserRepository;
 import com.dms.backend.services.OrderService;
@@ -23,19 +24,38 @@ public class OrderController {
     @Autowired
     private UserRepository userRepository;
 
-    private Tenant getCurrentTenant() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        return userRepository.findByEmail(email).get().getTenant();
-    }
-
     @GetMapping
     public List<Order> getAllOrders() {
-        return orderRepository.findByTenant(getCurrentTenant());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByEmail(auth.getName()).get();
+        Tenant currentTenant = currentUser.getTenant();
+
+        // If the user is a Consumer, they only see their own orders
+        boolean isConsumer = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
+        if (isConsumer) {
+            return orderRepository.findByTenant(currentTenant).stream()
+                    .filter(o -> o.getCreatedBy() != null && o.getCreatedBy().getId().equals(currentUser.getId()))
+                    .toList();
+        }
+
+        // Distributor/Retailer logic (could be further refined if retailers should only see theirs)
+        boolean isRetailer = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_RETAILER"));
+        if (isRetailer) {
+            // Assume Retailer has a retailer profile associated via some logic, but for now fallback to createdBy or tenant logic
+            return orderRepository.findByTenant(currentTenant).stream()
+                    .filter(o -> o.getCreatedBy() != null && o.getCreatedBy().getId().equals(currentUser.getId()))
+                    .toList();
+        }
+
+        // Admin sees all
+        return orderRepository.findByTenant(currentTenant);
     }
 
     @PostMapping
     public Order createOrder(@RequestBody Order order) {
-        return orderService.placeOrder(order, getCurrentTenant());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByEmail(auth.getName()).get();
+        order.setCreatedBy(currentUser);
+        return orderService.placeOrder(order, currentUser.getTenant());
     }
 }

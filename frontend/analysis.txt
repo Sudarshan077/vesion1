@@ -1,0 +1,7 @@
+﻿Analyzing frontend...                                           
+
+  error - The method 'get' isn't defined for the type 'ApiService' - lib\screens\consumer_dashboard_screen.dart:27:45 - undefined_method
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\services\api_service.dart:183:9 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\services\api_service.dart:184:9 - use_null_aware_elements
+  error - The name 'MyApp' isn't a class - test\widget_test.dart:16:35 - creation_with_non_type
+

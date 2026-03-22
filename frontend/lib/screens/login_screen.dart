@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   final _formKey = GlobalKey<FormState>();
   bool _isSignUp = false;
   bool _obscurePassword = true;
+  String _selectedRole = 'DISTRIBUTOR';
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
@@ -52,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
         tenantName: _tenantController.text.trim(),
+        role: _selectedRole,
       );
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -223,6 +225,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             const SizedBox(height: 16),
                           ],
                           if (_isSignUp) ...[
+                            // Role selector
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.06),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  _buildRoleChip('DISTRIBUTOR', Icons.warehouse_rounded, 'Distributor'),
+                                  _buildRoleChip('RETAILER', Icons.store_rounded, 'Retailer'),
+                                  _buildRoleChip('CONSUMER', Icons.person_rounded, 'Consumer'),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller: _fullNameController,
                               decoration: const InputDecoration(
@@ -311,6 +330,36 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoleChip(String role, IconData icon, String label) {
+    final isSelected = _selectedRole == role;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedRole = role),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.accent.withValues(alpha: 0.2) : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            border: isSelected ? Border.all(color: AppTheme.accent.withValues(alpha: 0.4)) : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: isSelected ? AppTheme.accent : AppTheme.textSecondary, size: 20),
+              const SizedBox(height: 4),
+              Text(label, style: TextStyle(
+                color: isSelected ? AppTheme.accent : AppTheme.textSecondary,
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+              )),
+            ],
           ),
         ),
       ),
